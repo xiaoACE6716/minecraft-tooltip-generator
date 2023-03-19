@@ -29,7 +29,7 @@ public class TooltipBuilder {
     private static final int UNDERLINE_STRIKETHROUGH_LINE_HEIGH = (int) (FONT_SIZE *0.05);
     private static final int UNDERLINE_STRIKETHROUGH_LINE_HEIGH_BOLD = UNDERLINE_STRIKETHROUGH_LINE_HEIGH*2;
 
-    private Font font = new Font(Font.SANS_SERIF, Font.PLAIN, (int) FONT_SIZE);
+    private Font font = new Font(Font.SANS_SERIF, Font.PLAIN, FONT_SIZE);
     private boolean textShadow = true;
     private boolean betterMagic = false;
 
@@ -143,13 +143,11 @@ public class TooltipBuilder {
 
         textCurrentY += getTextHeight(font, name)+NAME_LORE_DIVIDER_SIZE;
 
-        int i = 1;
         for(String line: lore){
 
             drawColoredText(graphics2D, line, textCurrentX, textCurrentY);
             textCurrentY += getTextHeight(font, line);
 
-            i++;
         }
 
         graphics2D.setColor(new Color(0, 255, 0));
@@ -163,7 +161,7 @@ public class TooltipBuilder {
             outputDirectory = outputDirectory.replaceAll("\\\\", "/");
 
             String[] fileName = outputDirectory.split("/");
-            String ext[] = fileName[fileName.length-1].split("\\.");
+            String[] ext = fileName[fileName.length-1].split("\\.");
             String extension = ext[ext.length-1];
 
             ImageIO.write(asBufferedImage(), extension, new File(outputDirectory));
