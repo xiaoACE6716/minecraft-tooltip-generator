@@ -180,32 +180,32 @@ public class TooltipBuilder {
         return font.getStringBounds(text, new FontRenderContext(font.getTransform(), false, false)).getBounds().getHeight();
     }
 
-    private void drawColoredText(Graphics2D graphics2D, String text, int x, int y){
+        private void drawColoredText(Graphics2D graphics2D, String text, int x, int y) {
 
         Color color = Minecraft.Color.WHITE.getColor();
 
-        for(String textMatched: text.split(code)){
+        for (String textMatched : text.split(code)) {
 
-            String colorCode = textMatched.length() > 0 ?  String.valueOf(textMatched.charAt(0)) : "";
+            String colorCode = textMatched.length() > 0 ? String.valueOf(textMatched.charAt(0)) : "";
 
-            if(textMatched.length() > 0) textMatched = textMatched.substring(1);
+            List<Minecraft.Format> formats = new ArrayList<>();
 
+            for (Minecraft.Format format : Minecraft.Format.values()) {
 
-            for(Minecraft.Color mccolor: Minecraft.Color.values()){
-
-                if( mccolor.getCode().equals(colorCode) ) {
-                    color = mccolor.getColor();
+                if (format.getCode().equals(colorCode)) {
+                    formats.add(format);
                     break;
                 }
 
             }
 
-            List<Minecraft.Format> formats = new ArrayList<>();
+            for (Minecraft.Color mccolor : Minecraft.Color.values()) {
 
-            for (Minecraft.Format format: Minecraft.Format.values()){
-
-                if(format.getCode().equals(colorCode)) {
-                    formats.add(format);
+                if (mccolor.getCode().equals(colorCode)) {
+                    color = mccolor.getColor();
+                    if (textMatched.length() > 0) {
+                        textMatched = textMatched.substring(1);
+                    }
                     break;
                 }
 
@@ -213,15 +213,15 @@ public class TooltipBuilder {
 
             Font font = this.font;
 
-            if(formats.contains(Minecraft.Format.BOLD)) formats.add(Minecraft.Format.BOLD);
+            if (formats.contains(Minecraft.Format.BOLD)) formats.add(Minecraft.Format.BOLD);
 
             if (formats.contains(Minecraft.Format.ITALIC)) formats.add(Minecraft.Format.ITALIC);
 
             if (formats.contains(Minecraft.Format.RESET)) color = Minecraft.Color.WHITE.getColor();
 
-            if(formats.contains(Minecraft.Format.MAGIC)){
+            if (formats.contains(Minecraft.Format.MAGIC)) {
 
-                if(!betterMagic) {
+                if (!betterMagic) {
                     textMatched = Util.getRandomString(Minecraft.MAGIC_CHARS, textMatched.length());
                 } else {
                     textMatched = Util.getRandomString("█", textMatched.length());
@@ -229,49 +229,47 @@ public class TooltipBuilder {
 
             }
 
-            if(formats.contains(Minecraft.Format.BOLD) && formats.contains(Minecraft.Format.ITALIC)){
+            if (formats.contains(Minecraft.Format.BOLD) && formats.contains(Minecraft.Format.ITALIC)) {
                 font = font.deriveFont(Font.BOLD + Font.ITALIC);
-            } else if(formats.contains(Minecraft.Format.BOLD)){
+            } else if (formats.contains(Minecraft.Format.BOLD)) {
                 font = font.deriveFont(Font.BOLD);
-            } else if (formats.contains(Minecraft.Format.ITALIC)){
+            } else if (formats.contains(Minecraft.Format.ITALIC)) {
                 font = font.deriveFont(Font.ITALIC);
             }
 
             graphics2D.setFont(font);
 
-            if(textShadow){
-                Color shadowColor = new Color((int)(color.getRed()*SHADOW_COLOR), (int)(color.getGreen()*SHADOW_COLOR), (int)(color.getBlue()*SHADOW_COLOR));
+            if (textShadow) {
+                Color shadowColor = new Color((int) (color.getRed() * SHADOW_COLOR), (int) (color.getGreen() * SHADOW_COLOR), (int) (color.getBlue() * SHADOW_COLOR));
                 graphics2D.setColor(shadowColor);
-                graphics2D.drawString(textMatched, x+TEXT_SHADOW_OFFSET, y+TEXT_SHADOW_OFFSET);
+                graphics2D.drawString(textMatched, x + TEXT_SHADOW_OFFSET, y + TEXT_SHADOW_OFFSET);
             }
 
             graphics2D.setColor(color);
             graphics2D.drawString(textMatched, x, y);
 
-            if (formats.contains(Minecraft.Format.UNDERLINE)){
+            if (formats.contains(Minecraft.Format.UNDERLINE)) {
 
                 int width = (int) getTextWidth(font, textMatched);
                 int height = (int) getTextHeight(font, textMatched);
 
                 int lineSize = formats.contains(Minecraft.Format.BOLD) ? UNDERLINE_STRIKETHROUGH_LINE_HEIGH_BOLD : UNDERLINE_STRIKETHROUGH_LINE_HEIGH;
-                graphics2D.fillRect(x, (int) (y+(height*0.1)), width, lineSize);
+                graphics2D.fillRect(x, (int) (y + (height * 0.1)), width, lineSize);
 
             }
 
-            if (formats.contains(Minecraft.Format.STRIKETHROUGH)){
+            if (formats.contains(Minecraft.Format.STRIKETHROUGH)) {
 
                 int width = (int) getTextWidth(font, textMatched);
                 int height = (int) getTextHeight(font, textMatched);
 
                 int lineSize = formats.contains(Minecraft.Format.BOLD) ? UNDERLINE_STRIKETHROUGH_LINE_HEIGH_BOLD : UNDERLINE_STRIKETHROUGH_LINE_HEIGH;
-                graphics2D.fillRect(x, (int) (y-(height*0.25)), width, lineSize);
+                graphics2D.fillRect(x, (int) (y - (height * 0.25)), width, lineSize);
+
 
             }
-
             x += getTextWidth(graphics2D.getFont(), textMatched);
-
         }
-
     }
 
 }
